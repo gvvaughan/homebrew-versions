@@ -2,8 +2,8 @@ require 'formula'
 
 class Lua52 < Formula
   homepage 'http://www.lua.org/'
-  url 'http://www.lua.org/ftp/lua-5.2.2.tar.gz'
-  sha1 '0857e41e5579726a4cb96732e80d7aa47165eaf5'
+  url 'http://www.lua.org/ftp/lua-5.2.3.tar.gz'
+  sha1 '926b7907bc8d274e063d42804666b40a3f3c124c'
 
   fails_with :llvm do
     build 2326
@@ -54,7 +54,7 @@ index bd9515f..5940ba9 100644
  TO_BIN= lua luac
  TO_INC= lua.h luaconf.h lualib.h lauxlib.h lua.hpp
 -TO_LIB= liblua.a
-+TO_LIB= liblua.5.2.1.dylib
++TO_LIB= liblua.5.2.3.dylib
  TO_MAN= lua.1 luac.1
  
  # Lua version and release.
@@ -62,7 +62,7 @@ index bd9515f..5940ba9 100644
  	cd src && $(INSTALL_DATA) $(TO_INC) $(INSTALL_INC)
  	cd src && $(INSTALL_DATA) $(TO_LIB) $(INSTALL_LIB)
  	cd doc && $(INSTALL_DATA) $(TO_MAN) $(INSTALL_MAN)
-+	ln -s -f liblua.5.2.1.dylib $(INSTALL_LIB)/liblua.5.2.dylib
++	ln -s -f liblua.5.2.3.dylib $(INSTALL_LIB)/liblua.5.2.dylib
 +	ln -s -f liblua.5.2.dylib $(INSTALL_LIB)/liblua.dylib
  
  uninstall:
@@ -76,7 +76,7 @@ index 8c9ee67..7f92407 100644
  PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
  
 -LUA_A=	liblua.a
-+LUA_A=	liblua.5.2.1.dylib
++LUA_A=	liblua.5.2.3.dylib
  CORE_O=	lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o \
  	lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o \
  	ltm.o lundump.o lvm.o lzio.o
@@ -87,21 +87,21 @@ index 8c9ee67..7f92407 100644
 -	$(AR) $@ $(BASE_O)
 -	$(RANLIB) $@
 +	$(CC) -dynamiclib -install_name HOMEBREW_PREFIX/lib/liblua.5.2.dylib \
-+		-compatibility_version 5.2 -current_version 5.2.1 \
-+		-o liblua.5.2.1.dylib $^
++		-compatibility_version 5.2 -current_version 5.2.3 \
++		-o liblua.5.2.3.dylib $^
  
  $(LUA_T): $(LUA_O) $(LUA_A)
 -	$(CC) -o $@ $(LDFLAGS) $(LUA_O) $(LUA_A) $(LIBS)
-+	$(CC) -fno-common $(MYLDFLAGS) -o $@ $(LUA_O) $(LUA_A) -L. -llua.5.2.1 $(LIBS)
++	$(CC) -fno-common $(MYLDFLAGS) -o $@ $(LUA_O) $(LUA_A) -L. -llua.5.2.3 $(LIBS)
  
  $(LUAC_T): $(LUAC_O) $(LUA_A)
  	$(CC) -o $@ $(LDFLAGS) $(LUAC_O) $(LUA_A) $(LIBS)
 @@ -106,7 +107,7 @@ linux:
- 	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_LINUX" SYSLIBS="-Wl,-E -ldl -lreadline -lncurses"
+ 	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_LINUX" SYSLIBS="-Wl,-E -ldl -lreadline"
  
  macosx:
--	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_MACOSX" SYSLIBS="-lreadline"
-+	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_MACOSX -fno-common" SYSLIBS="-lreadline"
+-	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_MACOSX" SYSLIBS="-lreadline" CC=cc
++	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_MACOSX -fno-common" SYSLIBS="-lreadline" CC=cc
  
  mingw:
  	$(MAKE) "LUA_A=lua52.dll" "LUA_T=lua.exe" \
