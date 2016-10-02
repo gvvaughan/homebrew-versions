@@ -36,7 +36,7 @@ class Lua53 < Formula
     # Use our CC/CFLAGS to compile.
     inreplace "src/Makefile" do |s|
       s.remove_make_var! "CC"
-      s.change_make_var! "CFLAGS", "#{ENV.cflags} -DLUA_COMPAT_ALL $(SYSCFLAGS) $(MYCFLAGS)"
+      s.change_make_var! "CFLAGS", "#{ENV.cflags} -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS)"
       s.change_make_var! "MYLDFLAGS", ENV.ldflags
     end
 
